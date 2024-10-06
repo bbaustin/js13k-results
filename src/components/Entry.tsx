@@ -11,19 +11,28 @@ export const Entry = ({
   graphics,
   audio,
   controls,
-}: EntryData) => {
+  index,
+}: EntryProps) => {
   return (
     <tr>
-      <th scope='row'>{name}</th>
+      <th
+        scope='row'
+        className='not-bold'
+      >
+        {index}
+      </th>
+      <td className='bold'>{name}</td>
       <td>{author}</td>
       <td>{votes}</td>
-      <td>{overall}</td>
-      <td>{theme}</td>
-      <td>{innovation}</td>
-      <td>{gameplay}</td>
-      <td>{graphics}</td>
-      <td>{audio}</td>
-      <td>{controls}</td>
+      <td>{overall.toFixed(2)}</td>
+      <td>{theme.toFixed(2)}</td>
+      <td>{innovation.toFixed(2)}</td>
+      <td>{gameplay.toFixed(2)}</td>
+      <td>{graphics.toFixed(2)}</td>
+      <td>{audio.toFixed(2)}</td>
+      <td>{controls.toFixed(2)}</td>
     </tr>
   );
 };
+
+type EntryProps = EntryData & { index: number };

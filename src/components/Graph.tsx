@@ -25,8 +25,18 @@ export const Graph = () => {
 
     /* Copy and sort the data based on the specified column */
     const sortedArray = [...sortedData].sort((a, b) => {
-      if (a[column] < b[column]) return direction === 'asc' ? -1 : 1;
-      if (a[column] > b[column]) return direction === 'asc' ? 1 : -1;
+      /* Account for names that start with lowercase */
+      const aValue =
+        typeof a[column] === 'string'
+          ? (a[column] as string).toLowerCase()
+          : a[column];
+      const bValue =
+        typeof b[column] === 'string'
+          ? (b[column] as string).toLowerCase()
+          : b[column];
+
+      if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return direction === 'asc' ? 1 : -1;
       return 0;
     });
 
@@ -40,73 +50,89 @@ export const Graph = () => {
       <caption>Js13kGames 2024 Results</caption>
       <thead>
         <tr>
+          <th>#</th>
           <th
             scope='col'
             onClick={() => sortByCategory('name')}
+            className={sortConfig.column === 'name' ? 'active-sort' : ''}
           >
             Game Title
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('author')}
+            className={sortConfig.column === 'author' ? 'active-sort' : ''}
           >
             Author
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('votes')}
+            className={sortConfig.column === 'votes' ? 'active-sort' : ''}
           >
             Number of Votes
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('overall')}
+            className={sortConfig.column === 'overall' ? 'active-sort' : ''}
           >
             Overall Score
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('theme')}
+            className={sortConfig.column === 'theme' ? 'active-sort' : ''}
           >
             Theme
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('innovation')}
+            className={sortConfig.column === 'innovation' ? 'active-sort' : ''}
           >
             Innovation
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('gameplay')}
+            className={sortConfig.column === 'gameplay' ? 'active-sort' : ''}
           >
             Gameplay
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('graphics')}
+            className={sortConfig.column === 'graphics' ? 'active-sort' : ''}
           >
             Graphics
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('audio')}
+            className={sortConfig.column === 'audio' ? 'active-sort' : ''}
           >
             Audio
           </th>
           <th
             scope='col'
             onClick={() => sortByCategory('controls')}
+            className={sortConfig.column === 'controls' ? 'active-sort' : ''}
           >
             Controls
           </th>
         </tr>
       </thead>
       <tbody>
-        {sortedData.map((entry) => {
+        {sortedData.map((entry, index) => {
           return (
             <Entry
               key={entry.name}
+              index={
+                sortConfig.direction === 'desc'
+                  ? index + 1
+                  : data.length - index
+              }
               {...entry}
             />
           );
