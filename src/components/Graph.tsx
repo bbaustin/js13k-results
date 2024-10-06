@@ -1,26 +1,115 @@
-import data from '../assets/results.json';
+import { useState } from 'react';
 import { Entry } from './Entry';
+import data from '../assets/results.json';
 
 export const Graph = () => {
+  const [sortedData, setSortedData] = useState(data);
+  const [sortConfig, setSortConfig] = useState<{
+    column: keyof EntryData;
+    direction: 'asc' | 'desc';
+  }>({
+    column: 'overall',
+    direction: 'desc',
+  });
+
+  /**
+   *
+   * @param column {keyof EntryData} like name, author, innovation, gameplay...
+   */
+  const sortByCategory = (column: keyof EntryData) => {
+    // Determine the sort direction: toggle between ascending and descending
+    const direction =
+      sortConfig.column === column && sortConfig.direction === 'desc'
+        ? 'asc'
+        : 'desc';
+
+    /* Copy and sort the data based on the specified column */
+    const sortedArray = [...sortedData].sort((a, b) => {
+      if (a[column] < b[column]) return direction === 'asc' ? -1 : 1;
+      if (a[column] > b[column]) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    /* Update the sorted data and sort configuration */
+    setSortedData(sortedArray);
+    setSortConfig({ column, direction });
+  };
+
   return (
     <table>
+      <caption>Js13kGames 2024 Results</caption>
       <thead>
         <tr>
-          <th scope='col'>Title</th>
-          <th scope='col'>Author</th>
-          <th scope='col'>Number of Votes</th>
-          <th scope='col'>Overall Score</th>
-          <th scope='col'>Theme</th>
-          <th scope='col'>Innovation</th>
-          <th scope='col'>Gameplay</th>
-          <th scope='col'>Graphics</th>
-          <th scope='col'>Audio</th>
-          <th scope='col'>Controls</th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('name')}
+          >
+            Game Title
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('author')}
+          >
+            Author
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('votes')}
+          >
+            Number of Votes
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('overall')}
+          >
+            Overall Score
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('theme')}
+          >
+            Theme
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('innovation')}
+          >
+            Innovation
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('gameplay')}
+          >
+            Gameplay
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('graphics')}
+          >
+            Graphics
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('audio')}
+          >
+            Audio
+          </th>
+          <th
+            scope='col'
+            onClick={() => sortByCategory('controls')}
+          >
+            Controls
+          </th>
         </tr>
       </thead>
       <tbody>
-        {data.map((entry) => {
-          return <Entry {...entry} />;
+        {sortedData.map((entry) => {
+          return (
+            <Entry
+              key={entry.name}
+              {...entry}
+            />
+          );
         })}
       </tbody>
     </table>
